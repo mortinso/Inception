@@ -1,0 +1,13 @@
+-- Create $SQL_DATABASE
+CREATE DATABASE IF NOT EXISTS $SQL_DATABASE;
+
+-- Create $SQL_USER with permission to connect from any host (%) with $SQL_PASSWORD
+CREATE USER IF NOT EXISTS '$SQL_USER'@'%' IDENTIFIED BY '$SQL_PASSWORD';
+
+-- Grant all rights to $SQL_USER with $SQL_PASSWORD for $SQL_DATABASE
+GRANT ALL PRIVILEGES ON $SQL_DATABASE.* TO '$SQL_USER'@'%' IDENTIFIED BY 'SQL_PASSWORD';
+
+-- Refresh priviledge info in mariadb
+FLUSH PRIVILEGES;
+
+USE $SQL_DATABASE

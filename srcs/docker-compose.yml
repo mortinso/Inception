@@ -5,9 +5,9 @@ services:
     container_name: nginx
     ports:
       - "443:443"
-  mariadb:
-    image: mariadb
-    build: requirements/mariadb/.
-    container_name: mariadb
-    ports:
-      - "3306"
+  # mariadb:
+  #   image: mariadb
+  #   build: requirements/mariadb/.
+  #   container_name: mariadb
+  #   ports:
+  #     - "3306"

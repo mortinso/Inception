@@ -1,23 +1,20 @@
 #!/bin/bash
 
-# & runs command in background
-mysqld_safe &
+# service mysql start;
 
-#Attempts to connect to MYSQL server (localhost by default). Breaks on return 0 (Server is online)
-while ! mysqladmin ping --silent; do
-	echo "Waiting for MariaDB to start..."
-	sleep 2
-done
+# mysql -e "CREATE DATABASE IF NOT EXISTS \`${SQL_DATABASE}\`;"
 
-if [ ! -d "/var/lib/mysql/$MYSQL_DATABASE" ]; then
+# mysql -e "CREATE USER IF NOT EXISTS \`${SQL_USER}\`@'localhost' IDENTIFIED BY '${SQL_PASSWORD}';"
 
-	envsubst < init.sql > tmp.sql
+# mysql -e "GRANT ALL PRIVILEGES ON \`${SQL_DATABASE}\`.* TO \`${SQL_USER}\`@'%' IDENTIFIED BY '${SQL_PASSWORD}';"
 
-	mysql -u root < tmp.sql
-	
-else
-	echo "MariaDB already configured!"
-fi
+# mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${SQL_ROOT_PASSWORD}';"
 
-#Wait for background processes to finnish, in this case, msyqld_safe.
-wait
+# mysql -e "FLUSH PRIVILEGES;"
+
+# mysqladmin -u root -p$SQL_ROOT_PASSWORD shutdown
+
+# exec mysqld_safe
+
+mysql_install_db
+mysqld

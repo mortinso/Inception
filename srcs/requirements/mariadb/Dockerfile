@@ -2,16 +2,17 @@ FROM debian:bullseye
 
 RUN apt update && apt upgrade -y && apt install -y mariadb-server
 
-COPY 50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
-COPY init.sql /usr/local/bin/init.sql
+COPY 50-server.cnf /etc/mysql/mariadb.conf.d/.
+COPY init.sql /var/lib/mysql/init.sql
 COPY script.sh .
 
-RUN mkdir /var/run/mysqld
+RUN mkdir /run/mysqld && chmod +x script.sh
 
-RUN chgrp -R mysql /var/run/mysqld && chgrp -R mysql /var/lib/mysql
+# # OWNER:GROUP
+# RUN chown mysql:mysql /var/run/mysqld && chown -R mysql:mysql /var/lib/mysql
 
-RUN chmod 755 /var/lib/mysql && chmod +x script.sh
+# RUN chmod 755 /var/lib/mysql && chmod 755 /etc/mysql/mariadb.conf.d/50-server.cnf && chmod +x script.sh
 
 EXPOSE 3306
 
-# CMD ["./script.sh"]
+CMD ["./script.sh"]

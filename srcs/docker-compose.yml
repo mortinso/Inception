@@ -1,13 +1,60 @@
 services:
+  mariadb:
+    build: requirements/mariadb/.   # Location of the Dockerfile. *
+    image: mariadb
+    container_name: mariadb
+    volumes:                        # Maps a data directory or configuration file to the container.
+      - mariadb:/var/lib/mysql
+    restart: unless-stopped
+    env_file: .env
+    networks:
+      - inception
+
+  wordpress:
+    build: requirements/wordpress/.
+    image: wordpress
+    container_name: wordpress
+    depends_on:
+      - mariadb
+    volumes:
+      - wordpress:/var/www/wordpress
+    restart: on-failure
+    env_file: .env
+    networks:
+      - inception
+
   nginx:
-    image: nginx
     build: requirements/nginx/.
+    image: nginx
     container_name: nginx
+    depends_on:
+      - wordpress
+    volumes:
+      - wordpress:/var/www/wordpress
+    restart: on-failure
+    env_file: .env  
     ports:
       - "443:443"
-  # mariadb:
-  #   image: mariadb
-  #   build: requirements/mariadb/.
-  #   container_name: mariadb
-  #   ports:
-  #     - "3306"
+    networks:
+      - inception
+
+volumes:
+  wordpress:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/home/mortins-/data/wordpress'
+  mariadb:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/home/mortins-/data/mariadb'
+
+networks:
+  inception:
+    driver: bridge
+
+# * `build` can be divided into `context`(location of the dockerfile) and `dockerfile`(name of the file).
+# However it's not necessary here, since the file is called 'Dockerfile'

@@ -1,15 +1,6 @@
-# [server]
-# init_file = /etc/mysql/init.sql
-
 [mysqld]
 port = 3306
 user = mysql
 bind_address = *
 datadir = /var/lib/mysql
 socket = /run/mysqld/mysqld.sock
-
-#
-# * Basic Settings
-#
-# pid-file                = /run/mysqld/mysqld.pid
-# basedir                 = /usr

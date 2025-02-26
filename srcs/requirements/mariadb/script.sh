@@ -32,5 +32,4 @@ sleep 1
 echo "The database ($MYSQL_DATABASE) already exists."
 fi
 
-# Execute any additional commands passed to the shell script
 exec "$@"

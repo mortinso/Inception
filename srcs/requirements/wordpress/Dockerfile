@@ -16,7 +16,7 @@ COPY wp_config.sh /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/wp_config.sh
 
-# This directory is required for creating the php7.4-fpm.pid file
+# Needed to create 'php7.4-fpm.pid'
 RUN mkdir /run/php/ && chmod 755 /run/php/
 
 EXPOSE 9000

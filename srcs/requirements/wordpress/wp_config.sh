@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Creates a new wp-config.php with database constants
 create_config() {

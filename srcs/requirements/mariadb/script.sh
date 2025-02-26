@@ -1,20 +1,36 @@
-#!/bin/bash
+#!/bin/sh
 
-# service mysql start;
+# Set up MariaDB if the database directory doesn't exist
+if [ ! -d "/var/lib/mysql/$MYSQL_DATABASE" ]; then
+echo "Setting up MariaDB..."
+service mariadb start
 
-# mysql -e "CREATE DATABASE IF NOT EXISTS \`${SQL_DATABASE}\`;"
+# Run mysql_secure_installation and set it up
+mysql_secure_installation << END
 
-# mysql -e "CREATE USER IF NOT EXISTS \`${SQL_USER}\`@'localhost' IDENTIFIED BY '${SQL_PASSWORD}';"
+Y
+$MYSQL_PASSWORD
+$MYSQL_PASSWORD
+Y
+Y
+Y
+Y
+END
 
-# mysql -e "GRANT ALL PRIVILEGES ON \`${SQL_DATABASE}\`.* TO \`${SQL_USER}\`@'%' IDENTIFIED BY '${SQL_PASSWORD}';"
+sleep 1
+mysql -u root -e "CREATE DATABASE $MYSQL_DATABASE;"
+mysql -u root -e "CREATE USER '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';"
+mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO '$MYSQL_USER'@'%';"
+mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_PASSWORD';"
+mysql -u root -p$MYSQL_PASSWORD -e "FLUSH PRIVILEGES;"
+mysqladmin -u root -p$MYSQL_PASSWORD shutdown
 
-# mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${SQL_ROOT_PASSWORD}';"
+echo "MariaDB set up!"
 
-# mysql -e "FLUSH PRIVILEGES;"
+else
+sleep 1
+echo "The database ($MYSQL_DATABASE) already exists."
+fi
 
-# mysqladmin -u root -p$SQL_ROOT_PASSWORD shutdown
-
-# exec mysqld_safe
-
-mysql_install_db
-mysqld
+# Execute any additional commands passed to the shell script
+exec "$@"

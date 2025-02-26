@@ -3,11 +3,11 @@
 # Creates a new wp-config.php with database constants
 create_config() {
 	wp config create \
-	--path=/var/www/wordpress \
-	--dbname=$SQL_DATABASE \
-	--dbuser=$SQL_USER \
-	--dbpass=$SQL_PASSWORD \
-	--dbhost=mariadb:3306 \
+	--path=/var/www/wordpress/ \
+	--dbname=$MYSQL_DATABASE \
+	--dbuser=$MYSQL_USER \
+	--dbpass=$MYSQL_PASSWORD \
+	--dbhost=mariadb \
 	--allow-root \
 	--force
 }
@@ -29,7 +29,7 @@ create_user() {
 	--allow-root \
 	$WP_USER_LOGIN \
 	$WP_USER_EMAIL \
-	--user_pass: $WP_USER_PASSWORD \
+	--user_pass=$WP_USER_PASSWORD \
 	--role=author
 }
 

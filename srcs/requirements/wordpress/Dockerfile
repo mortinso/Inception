@@ -7,17 +7,23 @@ RUN apt update && apt upgrade -y && apt install -y php7.4 \
 	mariadb-client \
 	wget
 
-# Download wordpress installer
-# RUN wget https://wordpress.org/latest.tar.gz -P /var/www
-# # Extract wordpress
-# RUN cd /var/www && tar -xzf latest.tar.gz && rm -rf latest.tar.gz
-
-# Installing wordpresses CLI
+# Installing wordpress's CLI
 RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && chmod 755 wp-cli.phar \
 	&& mv wp-cli.phar /usr/local/bin/wp
 
-# RUN chown -R root:root /var/www/wordpress
+COPY www.conf /etc/php/7.4/fpm/pool.d/www.conf
+COPY wp_config.sh /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/wp_config.sh
+
+# This directory is required for creating the php7.4-fpm.pid file
+RUN mkdir /run/php/ && chmod 755 /run/php/
 
 EXPOSE 9000
 
-COPY www.conf /etc/php/7.4/fpm/pool.d/www.conf
+WORKDIR /var/www/wordpress
+RUN chmod -R 755 /var/www/wordpress && chown -R www-data:www-data /var/www/wordpress
+
+ENTRYPOINT ["/usr/local/bin/wp_config.sh"]
+
+CMD ["/usr/sbin/php-fpm7.4 -F -R"]

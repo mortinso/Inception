@@ -11,8 +11,8 @@ RUN apt update && apt upgrade -y && apt install -y php7.4 \
 RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && chmod 755 wp-cli.phar \
 	&& mv wp-cli.phar /usr/local/bin/wp
 
-COPY www.conf /etc/php/7.4/fpm/pool.d/www.conf
-COPY wp_config.sh /usr/local/bin/
+COPY conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
+COPY tools/wp_config.sh /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/wp_config.sh
 

@@ -7,7 +7,7 @@ create_config() {
 	--dbname=$MYSQL_DATABASE \
 	--dbuser=$MYSQL_USER \
 	--dbpass=$MYSQL_PASSWORD \
-	--dbhost=mariadb \
+	--dbhost=mariadb:3306 \
 	--allow-root \
 	--force
 }
@@ -29,8 +29,8 @@ create_user() {
 	--allow-root \
 	$WP_USER_LOGIN \
 	$WP_USER_EMAIL \
-	--user_pass=$WP_USER_PASSWORD \
-	--role=author
+	--user_pass=$WP_USER_PASSWORD
+	# --role=author
 }
 
 if [ ! -f wp-config.php ]

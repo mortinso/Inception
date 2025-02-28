@@ -10,17 +10,17 @@ while ! mysqladmin ping --silent; do
 done
 
 # Check if the database exists, discard error messages
-if ! mysql -u root -e "USE $MYSQL_DATABASE;" 2>/dev/null; then
+if ! mysql -u root -e "USE $DATABASE_NAME;" 2>/dev/null; then
 
-	echo "Setting up $MYSQL_DATABASE..."
+	echo "Setting up $DATABASE_NAME..."
 
-	mysql -u root -e "CREATE DATABASE $MYSQL_DATABASE;"
-	mysql -u root -e "CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';"
-	mysql -u root -e "GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';"
+	mysql -u root -e "CREATE DATABASE $DATABASE_NAME;"
+	mysql -u root -e "CREATE USER IF NOT EXISTS $DATABASE_USER@'%' IDENTIFIED BY '$(cat $PASSWORDS_FILE | grep "DATABASE_PASSWORD" | sed "s/DATABASE_PASSWORD=//" | tr -d '\n')';"
+	mysql -u root -e "GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'%';"
 	mysql -u root -e "FLUSH PRIVILEGES;"
 fi
 
-echo "$MYSQL_DATABASE set up!"
+echo "$DATABASE_NAME set up!"
 
 # Wait for mysqld_safe to finish
 wait

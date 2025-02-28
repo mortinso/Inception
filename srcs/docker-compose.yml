@@ -7,6 +7,10 @@ services:
       - mariadb_data:/var/lib/mysql
     restart: unless-stopped
     env_file: .env
+    environment:
+      PASSWORDS_FILE: /run/secrets/passwords
+    secrets:
+      - passwords
     networks:
       - inception
 
@@ -20,6 +24,12 @@ services:
       - wordpress_data:/var/www/wordpress
     restart: on-failure
     env_file: .env
+    environment:
+      PASSWORDS_FILE: /run/secrets/passwords
+      EMAILS_FILE: /run/secrets/emails
+    secrets:
+      - passwords
+      - emails
     networks:
       - inception
 
@@ -36,6 +46,12 @@ services:
       - "443:443"
     networks:
       - inception
+
+secrets:
+  passwords:
+    file: ../secrets/passwords.txt
+  emails:
+    file: ../secrets/emails.txt
 
 volumes:
   wordpress_data:

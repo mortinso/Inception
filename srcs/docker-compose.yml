@@ -22,7 +22,7 @@ services:
       - mariadb
     volumes:
       - wordpress_data:/var/www/wordpress
-    restart: on-failure
+    restart: unless-stopped
     env_file: .env
     environment:
       PASSWORDS_FILE: /run/secrets/passwords
@@ -41,7 +41,7 @@ services:
       - wordpress
     volumes:
       - wordpress_data:/var/www/wordpress
-    restart: on-failure
+    restart: unless-stopped
     ports:
       - "443:443"
     networks:

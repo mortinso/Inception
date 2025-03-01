@@ -4,8 +4,8 @@ build:
 	@if [ ! -d "./secrets" ] || [ ! -e "./secrets/passwords.txt" ] || [ ! -e "./secrets/emails.txt" ]; \
 		then echo "Please run \`make secrets\` before running \`make\` again"; \
 	else \
-		mkdir -p /home/mortinso/data/mariadb; \
-		mkdir -p /home/mortinso/data/wordpress; \
+		mkdir -p /home/${USER}/data/mariadb; \
+		mkdir -p /home/${USER}/data/wordpress; \
 		docker compose -f srcs/docker-compose.yml up --build; \
 	fi
 
@@ -29,7 +29,7 @@ clean: # Stop and remove containers and networks created by up.
 	docker compose -f srcs/docker-compose.yml down
 
 fclean: clean
-	@rm -rf /home/mortinso/data
+	@rm -rf /home/${USER}/data
 	docker system prune -af --volumes
 
 re: fclean all

@@ -14,6 +14,7 @@ secrets:
 	@if [ ! -d "./secrets" ]; then mkdir secrets; fi
 	@if [ ! -e "./secrets/passwords.txt" ]; then touch secrets/passwords.txt; \
 		echo -n "DATABASE_PASSWORD=\n\
+DATABASE_ROOT_PASSWORD=\n\
 WP_USER_PASSWORD=\n\
 WP_ADMIN_PASSWORD=" > secrets/passwords.txt; \
 		echo "Please set the variables in 'secrets/passwords.txt'"; \

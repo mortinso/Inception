@@ -1,26 +1,46 @@
 #!/bin/sh
 
-# Run the mysql server in safe mode in the background
-mysqld_safe &
+# If the Database directory doesn't exist, set up MariaDB
+if [ ! -d "/var/lib/mysql/$DATABASE_NAME" ]; then
+    DATABASE_PASSWORD=$(cat $PASSWORDS_FILE | grep "DATABASE_PASSWORD" | sed "s/DATABASE_PASSWORD=//" | tr -d '\n');
+    DATABASE_ROOT_PASSWORD=$(cat $PASSWORDS_FILE | grep "DATABASE_ROOT_PASSWORD" | sed "s/DATABASE_ROOT_PASSWORD=//" | tr -d '\n');
 
-# MySQL health check
-while ! mysqladmin ping --silent; do
-	echo "Waiting for mysql..."
-	sleep 2
-done
+    # Start MariaDB as a service
+    echo "Starting MariaDB..."
+    service mariadb start
 
-# Check if the database exists, discard error messages
-if ! mysql -u root -e "USE $DATABASE_NAME;" 2>/dev/null; then
+    # Run mysql_secure_installation non-interactively
+    mariadb-secure-installation << END
 
-	echo "Setting up $DATABASE_NAME..."
+Y
+$DATABASE_ROOT_PASSWORD
+$DATABASE_ROOT_PASSWORD
+Y
+Y
+Y
+Y
+END
+    echo "MariaDB set up"
 
-	mysql -u root -e "CREATE DATABASE $DATABASE_NAME;"
-	mysql -u root -e "CREATE USER IF NOT EXISTS $DATABASE_USER@'%' IDENTIFIED BY '$(cat $PASSWORDS_FILE | grep "DATABASE_PASSWORD" | sed "s/DATABASE_PASSWORD=//" | tr -d '\n')';"
-	mysql -u root -e "GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'%';"
-	mysql -u root -e "FLUSH PRIVILEGES;"
+    # Create database, user and grant privileges
+    echo "Creating database $DATABASE_NAME..."
+    mysql -u root -p$DATABASE_ROOT_PASSWORD -e "CREATE DATABASE $DATABASE_NAME;"
+    mysql -u root -p$DATABASE_ROOT_PASSWORD -e "CREATE USER $DATABASE_USER@'%' IDENTIFIED BY '$DATABASE_PASSWORD';"
+    mysql -u root -p$DATABASE_ROOT_PASSWORD -e "GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'%';"
+    mysql -u root -p$DATABASE_ROOT_PASSWORD -e "FLUSH PRIVILEGES;"
+
+    # Stop MariaDB
+    sleep 1
+    echo "Stopping MariaDB..."
+    service mariadb stop
+
+    unset DATABASE_PASSWORD
+    unset DATABASE_ROOT_PASSWORD
+else
+    echo "Database $DATABASE_NAME already exists"
 fi
 
-echo "$DATABASE_NAME set up!"
+echo "Done"
 
-# Wait for mysqld_safe to finish
-wait
+# Execute any additional commands passed as arguments
+exec "$@"

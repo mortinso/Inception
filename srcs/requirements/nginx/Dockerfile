@@ -14,5 +14,5 @@ RUN mkdir -p /run/nginx
 EXPOSE 443
 
 CMD [ "nginx", "-g", "daemon off;" ]
-# '-g' makes nginx run in the foreground
-# 'daemon off' stops the container from exiting abruptly
+# '-g' allows you to pass global directives directly from the command line
+# 'daemon off' is a global directive that tells Nginx to run in the foreground

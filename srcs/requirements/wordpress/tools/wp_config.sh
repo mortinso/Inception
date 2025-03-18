@@ -30,8 +30,6 @@ create_user() {
 	$USERNAME \
 	$(cat $EMAILS_FILE | grep "WP_USER_EMAIL" | sed "s/WP_USER_EMAIL=//" | tr -d '\n') \
 	--user_pass=$(cat $PASSWORDS_FILE | grep "WP_USER_PASSWORD" | sed "s/WP_USER_PASSWORD=//" | tr -d '\n')
-	# --role=author
-	# $WP_USER_EMAIL \
 }
 
 if [ ! -f wp-config.php ]

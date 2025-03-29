@@ -16,7 +16,7 @@ create_config() {
 install() {
 	wp core install \
 	--allow-root \
-	--url=$USERNAME.42.fr/ \
+	--url=$STUDENT.42.fr/ \
 	--title=Inception \
 	--admin_user=$WP_ADMIN_LOGIN \
 	--admin_password=$(cat $PASSWORDS_FILE | grep "WP_ADMIN_PASSWORD" | sed "s/WP_ADMIN_PASSWORD=//" | tr -d '\n') \
@@ -27,7 +27,7 @@ install() {
 create_user() {
 	wp user create \
 	--allow-root \
-	$USERNAME \
+	$WP_LOGIN \
 	$(cat $EMAILS_FILE | grep "WP_USER_EMAIL" | sed "s/WP_USER_EMAIL=//" | tr -d '\n') \
 	--user_pass=$(cat $PASSWORDS_FILE | grep "WP_USER_PASSWORD" | sed "s/WP_USER_PASSWORD=//" | tr -d '\n')
 }
@@ -40,8 +40,8 @@ then
 	install
 	create_user
 
-	wp option update home "https://$USERNAME.42.fr" --allow-root
-	wp option update siteurl "https://$USERNAME.42.fr" --allow-root
+	wp option update home "https://$STUDENT.42.fr" --allow-root
+	wp option update siteurl "https://$STUDENT.42.fr" --allow-root
 
 else
 	echo "Wordpress is already installed and set up."

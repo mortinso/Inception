@@ -2,7 +2,7 @@ all: build
 
 build:
 	@if [ ! -d "./secrets" ] || [ ! -e "./secrets/passwords.txt" ] || [ ! -e "./secrets/emails.txt" ]; \
-		then echo "Please run \`make secrets\` before running \`make\` again"; \
+		then make --no-print-directory secrets;\
 	else \
 		mkdir -p /home/${USER}/data/mariadb; \
 		mkdir -p /home/${USER}/data/wordpress; \
@@ -11,6 +11,14 @@ build:
 
 
 secrets:
+	@if [ ! -e "./srcs/.env" ]; then touch srcs/.env; \
+		echo -n "DATABASE_NAME=\n\
+DATABASE_USER=\n\
+WP_LOGIN=\n\
+WP_ADMIN_LOGIN=\n\
+STUDENT_LOGIN=" > srcs/.env;\
+	echo "Please set the variables in 'srcs/.env'";\
+	fi
 	@if [ ! -d "./secrets" ]; then mkdir secrets; fi
 	@if [ ! -e "./secrets/passwords.txt" ]; then touch secrets/passwords.txt; \
 		echo -n "DATABASE_PASSWORD=\n\
@@ -24,7 +32,6 @@ WP_ADMIN_PASSWORD=" > secrets/passwords.txt; \
 WP_ADMIN_EMAIL=" > secrets/emails.txt; \
 		echo "Please set the variables in 'secrets/emails.txt'"; \
 	fi
-
 
 clean: # Stop and remove containers and networks created by up.
 	docker compose -f srcs/docker-compose.yml down

@@ -29,10 +29,14 @@ END
     mysql -u root -p$DATABASE_ROOT_PASSWORD -e "GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'%';"
     mysql -u root -p$DATABASE_ROOT_PASSWORD -e "FLUSH PRIVILEGES;"
 
+    sleep 1
+    mysql -u root -p$DATABASE_ROOT_PASSWORD -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$DATABASE_ROOT_PASSWORD';"
+    mysql -u root -p$DATABASE_ROOT_PASSWORD -e "FLUSH PRIVILEGES;"
+
     # Stop MariaDB
     sleep 1
     echo "Stopping MariaDB..."
-    service mariadb stop
+    mysqladmin -u root -p$DATABASE_ROOT_PASSWORD shutdown
 
     unset DATABASE_PASSWORD
     unset DATABASE_ROOT_PASSWORD

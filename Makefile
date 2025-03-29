@@ -33,13 +33,20 @@ WP_ADMIN_EMAIL=" > secrets/emails.txt; \
 		echo "Please set the variables in 'secrets/emails.txt'"; \
 	fi
 
-clean: # Stop and remove containers and networks created by up.
+stop: # Stop containers
 	docker compose -f srcs/docker-compose.yml down
 
-fclean: clean
+# Remove containers and networks created by up.
+# Needs to be run with sudo
+clean: stop
 	rm -rf /home/mortins-/data
 	docker system prune -af --volumes
 
+# Delete volumes
+# Needs to be run with sudo
+fclean: clean
+	docker volume rm mariadb_data wordpress_data
+
 re: fclean all
 
-.PHONY: all build clean fclean re secrets
+.PHONY: all build secrets stop clean fclean re

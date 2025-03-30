@@ -18,7 +18,7 @@ install() {
 	--allow-root \
 	--url=$STUDENT.42.fr/ \
 	--title=Inception \
-	--admin_user=$WP_ADMIN_LOGIN \
+	--admin_user=$(cat $WP_ADMIN_FILE | grep "WP_ADMIN_LOGIN" | sed "s/WP_ADMIN_LOGIN=//" | tr -d '\n') \
 	--admin_password=$(cat $PASSWORDS_FILE | grep "WP_ADMIN_PASSWORD" | sed "s/WP_ADMIN_PASSWORD=//" | tr -d '\n') \
 	--admin_email=$(cat $EMAILS_FILE | grep "WP_ADMIN_EMAIL" | sed "s/WP_ADMIN_EMAIL=//" | tr -d '\n')
 }

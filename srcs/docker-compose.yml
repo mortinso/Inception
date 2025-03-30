@@ -27,9 +27,11 @@ services:
     environment:
       PASSWORDS_FILE: /run/secrets/passwords
       EMAILS_FILE: /run/secrets/emails
+      WP_ADMIN_FILE: /run/secrets/wp_admin
     secrets:
       - passwords
       - emails
+      - wp_admin
     networks:
       - inception
 
@@ -52,6 +54,8 @@ secrets:
     file: ../secrets/passwords.txt
   emails:
     file: ../secrets/emails.txt
+  wp_admin:
+    file: ../secrets/wp_admin.txt
 
 volumes:
   wordpress_data:

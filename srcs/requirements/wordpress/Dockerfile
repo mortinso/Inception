@@ -16,7 +16,7 @@ COPY tools/wp_config.sh /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/wp_config.sh
 
-# Needed to create 'php7.4-fpm.pid'
+# Needed for the script to create wp-config.ph
 RUN mkdir /run/php/ && chmod 755 /run/php/
 
 EXPOSE 9000
@@ -26,4 +26,6 @@ RUN chmod -R 755 /var/www/wordpress && chown -R www-data:www-data /var/www/wordp
 
 ENTRYPOINT ["/usr/local/bin/wp_config.sh"]
 
+# -F to run in foreground
+# -R to run as root
 CMD ["/usr/sbin/php-fpm7.4 -F -R"]

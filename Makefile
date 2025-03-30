@@ -15,8 +15,7 @@ secrets:
 		echo -n "DATABASE_NAME=\n\
 DATABASE_USER=\n\
 WP_LOGIN=\n\
-WP_ADMIN_LOGIN=\n\
-STUDENT=" > srcs/.env;\
+STUDENT=mortins-" > srcs/.env;\
 	echo "Please set the variables in 'srcs/.env'";\
 	fi
 	@if [ ! -d "./secrets" ]; then mkdir secrets; fi
@@ -31,6 +30,10 @@ WP_ADMIN_PASSWORD=" > secrets/passwords.txt; \
 		echo -n "WP_USER_EMAIL=\n\
 WP_ADMIN_EMAIL=" > secrets/emails.txt; \
 		echo "Please set the variables in 'secrets/emails.txt'"; \
+	fi
+	@if [ ! -e "./secrets/wp_admin.txt" ]; then touch secrets/wp_admin.txt; \
+		echo -n "WP_ADMIN_LOGIN=" > secrets/wp_admin.txt; \
+		echo "Please set the variable in 'secrets/wp_admin.txt'"; \
 	fi
 
 stop: # Stop containers

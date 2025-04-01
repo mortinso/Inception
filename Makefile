@@ -1,7 +1,8 @@
 all: build
 
 build:
-	@if [ ! -d "./secrets" ] || [ ! -e "./secrets/passwords.txt" ] || [ ! -e "./secrets/emails.txt" ]; \
+	@if [ ! -e "./srcs/.env" ] || [ ! -d "./secrets" ] || [ ! -e "./secrets/passwords.txt" ] || \
+	[ ! -e "./secrets/emails.txt" ] || [ ! -e "./secrets/wp_admin.txt" ]; \
 		then make --no-print-directory secrets;\
 	else \
 		mkdir -p /home/${USER}/data/mariadb; \
@@ -42,13 +43,13 @@ stop: # Stop containers
 # Remove containers and networks created by up.
 # Needs to be run with sudo
 clean: stop
-	rm -rf /home/mortins-/data
-	docker system prune -af --volumes
+	@rm -rf /home/mortins-/data
+	@docker system prune -af --volumes
 
 # Delete volumes
 # Needs to be run with sudo
 fclean: clean
-	docker volume rm mariadb_data wordpress_data
+	@docker volume rm mariadb_data wordpress_data
 
 re: fclean all
 

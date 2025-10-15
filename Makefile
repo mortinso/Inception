@@ -16,7 +16,7 @@ secrets:
 		echo -n "DATABASE_NAME=\n\
 DATABASE_USER=\n\
 WP_LOGIN=\n\
-STUDENT=mortins-" > srcs/.env;\
+STUDENT=" > srcs/.env;\
 	echo "Please set the variables in 'srcs/.env'";\
 	fi
 	@if [ ! -d "./secrets" ]; then mkdir secrets; fi
